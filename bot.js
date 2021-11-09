@@ -1,19 +1,22 @@
-// Create a new instance of node-core-audio
-var coreAudio = require("node-core-audio");
+// Require the necessary discord.js classes
+const { Client, Intents } = require('discord.js');
+const { joinVoiceChannel } = require('@discordjs/voice');
+const { token } = require('./config.json');
 
-// Create a new audio engine
-var engine = coreAudio.createNewAudioEngine();
+// Create a new client instance
+const client = new Client({ intents: [Intents.FLAGS.GUILDS] });
 
-// Add an audio processing callback
-// This function accepts an input buffer coming from the sound card,
-// and returns an ourput buffer to be sent to your speakers.
-//
-// Note: This function must return an output buffer
-function processAudio( inputBuffer ) {
-    console.log( "%d channels", inputBuffer.length );
-    console.log( "Channel 0 has %d samples", inputBuffer[0].length );
+// When the client is ready, run this code (only once)
+client.once('ready', () => {
+	console.log('Ready!');
+});
 
-    return inputBuffer;
-}
+// Login to Discord with your client's token
+client.login(token);
 
-engine.addAudioCallback( processAudio );
+
+const connection = joinVoiceChannel({
+	channelId: channel.id,
+	guildId: channel.guild.id,
+	adapterCreator: channel.guild.voiceAdapterCreator,
+});
