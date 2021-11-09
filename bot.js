@@ -15,8 +15,8 @@ client.once('ready', () => {
 client.login(token);
 
 
-const connection = joinVoiceChannel({
-	channelId: channel.id,
-	guildId: channel.guild.id,
-	adapterCreator: channel.guild.voiceAdapterCreator,
-});
+// const connection = joinVoiceChannel({
+// 	channelId: channel.id,
+// 	guildId: channel.guild.id,
+// 	adapterCreator: channel.guild.voiceAdapterCreator,
+// });
