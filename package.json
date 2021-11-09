@@ -1,0 +1,6 @@
+{
+  "dependencies": {
+    "@discordjs/voice": "github:discordjs/voice",
+    "discord.js": "^13.3.1"
+  }
+}
