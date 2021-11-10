@@ -73,8 +73,10 @@ var ws = fs.createWriteStream('rawAudio.raw');
 
 //Start streaming
 ai.pipe(ws);
+resource = createAudioResource(ai)
 ai.start();
-
+const player = creatAudioPlayer();
+player.play(resource); // maybe ? 
 }
 async function execute2(message, serverQueue) {
   const args = message.content.split(" ");
