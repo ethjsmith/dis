@@ -8,7 +8,7 @@ const ai = new portAudio.AudioInput({
   channelCount: 2,
   sampleFormat: portAudio.SampleFormat16Bit,
   sampleRate: 44100,
-  deviceId : -1 // Use -1 or omit the deviceId to select the default device
+  deviceId : 0 // Use -1 or omit the deviceId to select the default device
 });
 
 // handle errors from the AudioInput
