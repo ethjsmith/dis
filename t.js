@@ -71,8 +71,8 @@ const transcoder = new prism.FFmpeg({
 const opus = new prism.opus.Encoder({ rate: 48000, channels: 2, frameSize: 960 });
 ai.pipe(transcoder).pipe(opus);
 ai.start();
-
-resource = createAudioResource(ai.pipe(transcoder).pipe(opus));
+// things are getting piped around twice here
+var resource = createAudioResource(ai.pipe(transcoder).pipe(opus));
 const player = createAudioPlayer();
 player.play(resource); // maybe ?
 }
