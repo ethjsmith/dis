@@ -1,7 +1,7 @@
 const { Client, Intents } = require('discord.js');
 const { prefix, token } = require("./config.json");
 const { join } = require('path');
-const { joinVoiceChannel, createAudioResource, createAudioPlayer, StreamType  } = require('@discordjs/voice');
+const { joinVoiceChannel, createAudioResource, StreamType  } = require('@discordjs/voice');
 const ytdl = require("ytdl-core");
 var fs = require('fs');
 var portAudio = require('naudiodon');
@@ -63,7 +63,7 @@ async function execute(message) {
     channelCount: 2,
     sampleFormat: portAudio.SampleFormat16Bit,
     sampleRate: 44100,
-    deviceId: 6, // Use -1 or omit the deviceId to select the default device
+    deviceId: 3, // Use -1 or omit the deviceId to select the default device
     closeOnError: true // Close the stream if an audio error is detected, if set false then just log the error
   }
 });
@@ -75,7 +75,7 @@ var ws = fs.createWriteStream('rawAudio.raw');
 ai.pipe(ws);
 resource = createAudioResource(ai)
 ai.start();
-const player = createAudioPlayer();
+const player = creatAudioPlayer();
 player.play(resource); // maybe ? 
 }
 async function execute2(message, serverQueue) {
