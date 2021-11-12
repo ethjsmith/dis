@@ -1,5 +1,5 @@
 const { Client, Intents } = require('discord.js');
-const { prefix, token } = require("./config.json");
+const { prefix, token, type, device } = require("./config.json");
 const { join } = require('path');
 const ytdl = require("ytdl-core");
 const prism = require("prism-media");
@@ -19,7 +19,7 @@ const {
 const player = createAudioPlayer({
 	behaviors: {
 		noSubscriber: NoSubscriberBehavior.Play,
-		maxMissedFrames: Math.round(config.maxTransmissionGap / 20),
+		maxMissedFrames: Math.round(5000 / 20),
 	},
 });
 function attachRecorder() {
@@ -32,9 +32,9 @@ function attachRecorder() {
 					'-loglevel',
 					'0',
 					'-f',
-					config.type,
+					type,
 					'-i',
-					config.type === 'dshow' ? `audio=${config.device}` : config.device,
+					type === 'dshow' ? `audio=${device}` : device,
 					'-acodec',
 					'libopus',
 					'-f',
@@ -55,9 +55,9 @@ function attachRecorder() {
 const client = new Client({ intents: [Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_MESSAGES] });
 
 const queue = new Map();
-console.log(portAudio.getHostAPIs());
-console.log("DEVICES!!_______________________");
-console.log(portAudio.getDevices());
+//console.log(portAudio.getHostAPIs());
+//console.log("DEVICES!!_______________________");
+//console.log(portAudio.getDevices());
 client.once("ready", () => {
   console.log("Ready!");
 });
@@ -88,15 +88,15 @@ client.on("messageCreate", async message => {
 
 async function execute(message) {
   console.log(message);
-  const connection = joinVoiceChannel({channelId: message.member.voice.channel.id,guildId: message.guild.id,adapterCreator: message.guild.voiceAdapterCreator,}); // condensed the declarations that work
-  var ai = new portAudio.AudioIO({
-  inOptions: {
-    channelCount: 2,
-    sampleFormat: portAudio.SampleFormat16Bit,
-    sampleRate: 44100,
-    deviceId: 6, // Use -1 or omit the deviceId to select the default device
-    closeOnError: true // Close the stream if an audio error is detected, if set false then just log the error
-  }});
+//  const connection = joinVoiceChannel({channelId: message.member.voice.channel.id,guildId: message.guild.id,adapterCreator: message.guild.voiceAdapterCreator,}); // condensed the declarations that work
+//  var ai = new portAudio.AudioIO({
+//  inOptions: {
+//    channelCount: 2,
+//    sampleFormat: portAudio.SampleFormat16Bit,
+//    sampleRate: 44100,
+//    deviceId: 6, // Use -1 or omit the deviceId to select the default device
+//    closeOnError: true // Close the stream if an audio error is detected, if set false then just log the error
+//  }});
 // https://amishshah.github.io/prism-media/?api#opus.encodeURIComponent // PRISM DOCS
 // Create a write stream to write out to a raw audio file
 //var ws = fs.createWriteStream('rawAudio.raw');
