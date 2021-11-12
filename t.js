@@ -3,6 +3,7 @@ const { prefix, token } = require("./config.json");
 const { join } = require('path');
 const { joinVoiceChannel, createAudioResource, createAudioPlayer, StreamType  } = require('@discordjs/voice');
 const ytdl = require("ytdl-core");
+const prism = require("prism-media");
 var fs = require('fs');
 var portAudio = require('naudiodon');
 
@@ -69,14 +70,27 @@ async function execute(message) {
 });
 
 // Create a write stream to write out to a raw audio file
-var ws = fs.createWriteStream('rawAudio.raw');
+//var ws = fs.createWriteStream('rawAudio.raw');
 
 //Start streaming
-ai.pipe(ws);
-resource = createAudioResource(ai)
-ai.start();
+//ai.pipe(ws);
+const transcoder = new prism.FFmpeg({
+  args: [
+    '-analyzeduration', '0',
+    '-loglevel', '0',
+    '-f', 's16le',
+    '-ar', '48000',
+    '-ac', '2',
+  ],
+});
+const opus = new prism.opus.Encoder({ rate: 48000, channels: 2, frameSize: 960 });
+ai.pipe(transcoder).pipe(opus);
+console.log("just checking where it gets to");
+resource = createAudioResource(ai.pipe(transcoder).pipe(opus));
+//ai.start();
 const player = createAudioPlayer();
 player.play(resource); // maybe ? 
+console.log("The code does hit");
 }
 async function execute2(message, serverQueue) {
   const args = message.content.split(" ");
