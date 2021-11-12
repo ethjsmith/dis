@@ -22,6 +22,21 @@ const player = createAudioPlayer({
 		maxMissedFrames: Math.round(5000 / 20),
 	},
 });
+player.on('stateChange', (oldState, newState) => {
+	if (oldState.status === AudioPlayerStatus.Idle && newState.status === AudioPlayerStatus.Playing) {
+		console.log('Playing audio output on audio player');
+	} else if (newState.status === AudioPlayerStatus.Idle) {
+		console.log('Playback has stopped. Attempting to restart.');
+		attachRecorder();
+	}
+});
+const client = new Client({ intents: [Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_MESSAGES] });
+
+const queue = new Map();
+//console.log(portAudio.getHostAPIs());
+//console.log("DEVICES!!_______________________");
+//console.log(portAudio.getDevices
+
 function attachRecorder() {
 	player.play(
 		createAudioResource(
@@ -52,14 +67,24 @@ function attachRecorder() {
 	);
 	console.log('Attached recorder - ready to go!');
 }
-const client = new Client({ intents: [Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_MESSAGES] });
+async function connectToChannel(channel) {
+	const connection = joinVoiceChannel({
+		channelId: channel.id,
+		guildId: channel.guild.id,
+		adapterCreator: channel.guild.voiceAdapterCreator,
+	});
+	try {
+		await entersState(connection, VoiceConnectionStatus.Ready, 30_000);
+		return connection;
+	} catch (error) {
+		connection.destroy();
+		throw error;
+	}
+}
 
-const queue = new Map();
-//console.log(portAudio.getHostAPIs());
-//console.log("DEVICES!!_______________________");
-//console.log(portAudio.getDevices());
 client.once("ready", () => {
   console.log("Ready!");
+	attachRecorder();
 });
 
 client.once("reconnecting", () => {
@@ -78,13 +103,30 @@ client.on("messageCreate", async message => {
   const serverQueue = queue.get(message.guild.id);
 
   if (message.content.startsWith(`${prefix}play`)) {
-    execute(message);
+    //execute(message);
+		join(message);
     return;
    } else {
      message.channel.send("You need to enter a valid command!");
    }
 });
 
+async function join(msg) {
+	console.log("joining!");
+	const channe; = msg.member?.voice.channel;
+	if (channel) {
+		try {
+				const connection = await connectToChannel(channel);
+				connection.subscribe(player);
+				await msg.reply('Playing now!');
+			} catch (error) {
+				console.error(error);
+			}
+		} else {
+			await message.reply('Join a voice channel then try again!');
+		}
+	}
+}
 
 async function execute(message) {
   console.log(message);
@@ -119,7 +161,7 @@ async function execute(message) {
 // var resource = createAudioResource(ai.pipe(transcoder).pipe(opus));
 // const player = createAudioPlayer();
 // player.play(resource); // maybe ?
-attachRecorder();
+//attachRecorder();
 }
 
 
