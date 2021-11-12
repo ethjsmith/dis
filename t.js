@@ -1,13 +1,57 @@
 const { Client, Intents } = require('discord.js');
 const { prefix, token } = require("./config.json");
 const { join } = require('path');
-const { joinVoiceChannel, createAudioResource, createAudioPlayer, StreamType  } = require('@discordjs/voice');
 const ytdl = require("ytdl-core");
 const prism = require("prism-media");
 var fs = require('fs');
 var portAudio = require('naudiodon');
+const {
+	NoSubscriberBehavior,
+	StreamType,
+	createAudioPlayer,
+	createAudioResource,
+	entersState,
+	AudioPlayerStatus,
+	VoiceConnectionStatus,
+	joinVoiceChannel,
+} = require('@discordjs/voice');
 
-
+const player = createAudioPlayer({
+	behaviors: {
+		noSubscriber: NoSubscriberBehavior.Play,
+		maxMissedFrames: Math.round(config.maxTransmissionGap / 20),
+	},
+});
+function attachRecorder() {
+	player.play(
+		createAudioResource(
+			new prism.FFmpeg({
+				args: [
+					'-analyzeduration',
+					'0',
+					'-loglevel',
+					'0',
+					'-f',
+					config.type,
+					'-i',
+					config.type === 'dshow' ? `audio=${config.device}` : config.device,
+					'-acodec',
+					'libopus',
+					'-f',
+					'opus',
+					'-ar',
+					'48000',
+					'-ac',
+					'2',
+				],
+			}),
+			{
+				inputType: StreamType.OggOpus,
+			},
+		),
+	);
+	console.log('Attached recorder - ready to go!');
+}
 const client = new Client({ intents: [Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_MESSAGES] });
 
 const queue = new Map();
@@ -59,22 +103,23 @@ async function execute(message) {
 
 //Start streaming
 //ai.pipe(ws);
-const transcoder = new prism.FFmpeg({
-  args: [
-    '-analyzeduration', '0',
-    '-loglevel', '0',
-    '-f', 's16le',
-    '-ar', '48000',
-    '-ac', '2',
-  ],
-});
-const opus = new prism.opus.Encoder({ rate: 48000, channels: 2, frameSize: 960 });
-ai.pipe(transcoder).pipe(opus);
-ai.start();
-// things are getting piped around twice here
-var resource = createAudioResource(ai.pipe(transcoder).pipe(opus));
-const player = createAudioPlayer();
-player.play(resource); // maybe ?
+// const transcoder = new prism.FFmpeg({
+//   args: [
+//     '-analyzeduration', '0',
+//     '-loglevel', '0',
+//     '-f', 's16le',
+//     '-ar', '48000',
+//     '-ac', '2',
+//   ],
+// });
+// const opus = new prism.opus.Encoder({ rate: 48000, channels: 2, frameSize: 960 });
+// ai.pipe(transcoder).pipe(opus);
+// ai.start();
+// // things are getting piped around twice here
+// var resource = createAudioResource(ai.pipe(transcoder).pipe(opus));
+// const player = createAudioPlayer();
+// player.play(resource); // maybe ?
+attachRecorder();
 }
 
 
