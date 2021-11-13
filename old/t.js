@@ -1,6 +1,6 @@
 const { Client, Intents } = require('discord.js');
 const { prefix, token, type, device } = require("./config.json");
-const { join } = require('path');
+//const { join } = require('path');
 const ytdl = require("ytdl-core");
 const prism = require("prism-media");
 var fs = require('fs');
@@ -113,7 +113,7 @@ client.on("messageCreate", async message => {
 
 async function join(msg) {
 	console.log("joining!");
-	const channe; = msg.member?.voice.channel;
+	const channel = msg.member?.voice.channel;
 	if (channel) {
 		try {
 				const connection = await connectToChannel(channel);
@@ -126,7 +126,6 @@ async function join(msg) {
 			await message.reply('Join a voice channel then try again!');
 		}
 	}
-}
 
 async function execute(message) {
   console.log(message);
