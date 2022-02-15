@@ -98,6 +98,8 @@ client.on('messageCreate', async (message) => {
 		} else {
 			await message.reply('Join a voice channel then try again!');
 		}
+	} else if (message.content === '-days') {
+		await message.reply("It has been 63 days since we have played dallins campaign ( december 14th )");
 	}
 });
 
