@@ -25,7 +25,7 @@ player.on('stateChange', (oldState, newState) => {
 	if (oldState.status === AudioPlayerStatus.Idle && newState.status === AudioPlayerStatus.Playing) {
 		console.log('Playing audio output on audio player');
 	} else if (newState.status === AudioPlayerStatus.Idle) {
-		console.log('Playback has stopped. Attempting to restart.');
+		//console.log('Playback has stopped. Attempting to restart.');
 		attachRecorder();
 	}
 });
@@ -58,7 +58,7 @@ function attachRecorder() {
 			},
 		),
 	);
-	console.log('Attached recorder - ready to go!');
+	//console.log('Attached recorder - ready to go!');
 }
 
 async function connectToChannel(channel) {
@@ -99,7 +99,11 @@ client.on('messageCreate', async (message) => {
 			await message.reply('Join a voice channel then try again!');
 		}
 	} else if (message.content === '-days') {
-		await message.reply("It has been 63 days since we have played dallins campaign ( december 14th )");
+		let lastTime = new Date("December 14, 2021")
+		let today = new Date()
+		let days = (today.getTime() - lastTime.getTime()) / (1000* 3600 * 24)
+		console.log(days)
+		await message.reply(`It has been ${parseInt(days)} days since we have played dallins campaign ( ${lastTime.toLocaleDateString("en-US")} )`);
 	}
 });
 
