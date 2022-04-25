@@ -1,4 +1,8 @@
 # Discord Radio Bot
+a discord bot to experiment with node, and try some weird stuff with audio output
+
+
+## included config: 
 
 **Works on:**
 
