@@ -1,6 +1,4 @@
-# Discord Radio Bot 🎧
-
-A proof-of-concept radio bot that uses @discordjs/voice and discord.js. Streams audio from an audio output hardware device on your computer over a Discord voice channel.
+# Discord Radio Bot
 
 **Works on:**
 

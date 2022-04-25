@@ -82,7 +82,7 @@ client.on('ready', async () => {
 	console.log('discord.js client is ready!');
 	attachRecorder();
 });
-
+let lastTime = new Date("April 24, 2022")
 client.on('messageCreate', async (message) => {
 	if (!message.guild) return;
 	if (message.content === '-join') {
@@ -99,11 +99,14 @@ client.on('messageCreate', async (message) => {
 			await message.reply('Join a voice channel then try again!');
 		}
 	} else if (message.content === '-days') {
-		let lastTime = new Date("December 14, 2021")
 		let today = new Date()
 		let days = (today.getTime() - lastTime.getTime()) / (1000* 3600 * 24)
 		console.log(days)
 		await message.reply(`It has been ${parseInt(days)} days since we have played dallins campaign ( ${lastTime.toLocaleDateString("en-US")} )`);
+	}
+	else if (message.content === '-newday') {
+		lastTime = new Date()
+		await message.reply("New day set ")
 	}
 });
 
